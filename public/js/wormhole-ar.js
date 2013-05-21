@@ -4,40 +4,43 @@ var g_stream;
 var g_call;
 
 function init() {
-    rtc.register("ar", function(worked) {
-      holla.createVideoStream(function(err, stream) {
-        console.log('creating video stream on AR side');
-        g_stream = stream;
+  rtc.register("ar", function(worked) {
+    holla.createFullStream(function(err, stream) {
+      console.log('creating video stream on AR side');
+      g_stream = stream;
 
-        // Draw my picture-in-picture
-        holla.pipe(stream, $(".me"));
-
-        // Wait 5 seconds then call
-//        window.setTimeout(function() { callWG(); }, 5000);
-      });
-
+      // Draw my picture-in-picture
+      holla.pipe(stream, $(".me"));
     });
 
-    rtc.on("presence", updatePresence);
+  });
 
+  rtc.on("presence", updatePresence);
 }
 
 function callWG() {
-    console.log("Calling WG");
-    call = rtc.call("wg");
-    call.addStream(g_stream);
+  console.log("Calling WG");
+  call = rtc.call("wg");
+  call.addStream(g_stream);
 
-    call.ready(function(stream) {
-      holla.pipe(stream, $(".them"));
-    });
+  call.ready(function(stream) {
+    call.mute();
+    holla.pipe(stream, $(".them"));
+  });
 
-    // Hide their video on hangup
-    call.on("hangup", function() {
-      console.log("Other end hung up");
-      $(".them").attr("src", "");
-    });
+  // Hide their video on hangup
+  call.on("hangup", function() {
+    console.log("Other end hung up");
+    $(".them").attr("src", "");
+  });
 
-    g_call = call;
+  g_call = call;
+}
+
+function hangup() {
+  console.log("Other end hung up");
+  g_call.end();
+  $(".them").attr("src", "");
 }
 
 function updatePresence(user) {
@@ -47,6 +50,8 @@ function updatePresence(user) {
 
     if (user.name === "wg" && user.online) {
       callWG();
+    } else if (user.name === "wg" && !user.online) {
+      hangup();
     }
 }
 
@@ -58,14 +63,16 @@ function hangup() {
 var g_mute = false;
 function toggleMute() {
   g_mute = !g_mute;
-  console.log("toggleMute is now", g_mute);
-  if (!g_call) return;
   if (g_mute) {
-    $("#mute").html("Muted");
-    g_call.mute();
+    $("#mute").show();
+    if (g_call) {
+      g_call.mute();
+    }
   } else {
-    $("#mute").html("Unmuted");
-    g_call.unmute();
+    $("#mute").hide();
+    if (g_call) {
+      g_call.unmute();
+    }
   }
 }
 

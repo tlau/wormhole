@@ -20,7 +20,7 @@
       <script src="../assets/js/html5shiv.js"></script>
     <![endif]-->
 </head>
-<body>
+<body id="body">
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -30,8 +30,11 @@
     </div>
 
     <div class="container-fluid">
-      <video class="them" autoplay="true"></video>
-      <video class="me rtc-pip" autoplay="true"></video>
+       <div class="video">
+          <div id="mute">Muted</div>
+          <video class="them" autoplay="true"></video>
+          <video class="me rtc-pip" autoplay="true"></video>
+       </div>
     </div>
 
     <!-- Le javascript
