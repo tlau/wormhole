@@ -25,7 +25,7 @@
 
   "dependencies": {
     "express": "*"
-    "holla": "*"
+    "holla": "0.6.3"
   },
   "devDependencies": {},
   "bundleDependencies": [],

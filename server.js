@@ -2,6 +2,7 @@
 //  OpenShift sample Node application
 var express = require('express');
 var fs      = require('fs');
+var http    = require('http');
 var holla   = require('holla');
 
 /**
@@ -131,16 +132,17 @@ var SampleApp = function() {
      *  the handlers.
      */
     self.initializeServer = function() {
-        self.createRoutes();
+        // self.createRoutes();
         self.app = express();
         self.app.use(express.static(__dirname + "/public"))
 
         //  Add handlers for the app (from the routes).
+        /*
         for (var r in self.routes) {
             self.app.get(r, self.routes[r]);
         }
+        */
 
-        self.rtc = holla.createServer(self.app, {debug: true, presence: true});
     };
 
 
@@ -162,10 +164,15 @@ var SampleApp = function() {
      */
     self.start = function() {
         //  Start the app on the specific interface (and port).
-        self.app.listen(self.port, self.ipaddress, function() {
-            console.log('%s: Node server started on %s:%d ...',
-                        Date(Date.now() ), self.ipaddress, self.port);
+        /*
+        self.rtc.listen(self.port, self.ipaddress, function() {
         });
+        */
+
+        self.server = http.createServer(self.app).listen(8080);
+        self.rtc = holla.createServer(self.server, {debug: true, presence: true});
+        console.log('%s: Node server started on %s:%d ...',
+                    Date(Date.now()), self.ipaddress, self.port);
     };
 
 };   /*  Sample Application.  */
