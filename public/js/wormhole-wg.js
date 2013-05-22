@@ -41,6 +41,11 @@ $(function() {
           console.log("Other end hung up");
           $(".them").attr("src", "");
         });
+
+        call.on("disconnect", function() {
+          console.log("Other end disconnected");
+          $(".them").attr("src", "");
+        });
       });
 
       rtc.on("disconnected", function() {
