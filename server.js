@@ -169,7 +169,7 @@ var SampleApp = function() {
         });
         */
 
-        self.server = http.createServer(self.app).listen(8080);
+        self.server = http.createServer(self.app).listen(self.port);
         self.rtc = holla.createServer(self.server, {debug: true, presence: true});
         console.log('%s: Node server started on %s:%d ...',
                     Date(Date.now()), self.ipaddress, self.port);
