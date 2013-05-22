@@ -1,6 +1,6 @@
 {
   "name": "Wormhole",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Opens a video tunnel between two endpoints",
   "keywords": [
     "Node.js",
@@ -24,8 +24,8 @@
   },
 
   "dependencies": {
-    "express": "*",
-    "holla": "0.6.3"
+    "express": "3.2.x",
+    "holla": "git://github.com/wearefractal/holla.git"
   },
   "devDependencies": {},
   "bundleDependencies": [],
