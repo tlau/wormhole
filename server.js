@@ -4,6 +4,7 @@ var express = require('express');
 var fs      = require('fs');
 var http    = require('http');
 var holla   = require('holla');
+var io      = require('socket.io');
 
 /**
  *  Define the sample application.
@@ -171,9 +172,56 @@ var SampleApp = function() {
 
         console.log('About to listen on port:', self.port, 'and host:', self.ipaddress);
         self.server = http.createServer(self.app).listen(self.port, self.ipaddress);
-        self.rtc = holla.createServer(self.server, {debug: true, presence: true});
+//        self.rtc = holla.createServer(self.server, {debug: true, presence: true});
         console.log('%s: Node server started on %s:%d ...',
                     Date(Date.now()), self.ipaddress, self.port);
+
+        self.io = io.listen(self.server);
+        self.io.on('connection', self.connect);
+
+        self.ar = null;
+        self.wg = null;
+    };
+
+    self.mute = function(data) {
+        if (self.wg) {
+          console.log('emitting mute yourself to WG');
+          self.wg.emit('set mute', data);
+        }
+    };
+
+    self.connect = function(client) {
+        var numClients = Object.keys(self.io.connected).length;
+        console.log('New connection over engineio,', numClients, 'connected');
+
+        client.on('id', function(params) {
+          console.log('id received from client', params);
+          
+          if (params['id'] == 'ar') {
+            // AR connected
+            self.ar = client;
+          } else {
+            self.wg = client;
+          }
+
+          client.set('id', params['id'], function() {
+            client.emit('ready', {id: params['id'], clients: numClients});
+          });
+        });
+
+        client.on('disconnect', function() {
+          console.log('Client', client, 'disconnected');
+        });
+
+        client.on('set mute', function(data) {
+          self.mute(data);
+        });
+        client.on('error', function(err) {
+          console.log('Error:', err);
+        });
+        client.on('packet', function(type, data) {
+          console.log('Packet type:', type, 'data:', data);
+        });
     };
 
 };   /*  Sample Application.  */

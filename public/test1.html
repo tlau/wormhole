@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app>
 <head>
-    <title>Wormhole to Willow Garage</title>
+    <title>AR</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Le styles -->
@@ -22,26 +22,28 @@
 </head>
 <body id="body">
     <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="#">Wormhole to Willow Garage, USA</a>
+          <a class="brand" href="#">AR</a>
         </div>
+      </div>
     </div>
 
-    <div class="container-fluid">
-      <div class="video">
-        <div id="mute">Muted</div>
-        <video class="them" autoplay="true"></video>
-        <video class="me rtc-pip" autoplay="true" muted="muted"></video>
-      </div>
-
+    <div class="container-fluid" ng-controller="Test1Ctrl">
+        <div>My mute status: {{my_mute}}</div><br>
+        <button class="btn" ng-click="toggleMyMute()">Mute us!</button><br>
+        <br>
+        <div>Their mute status: {{their_mute}}</div><br>
+        <button class="btn" ng-click="toggleTheirMute()">Mute them!</button><br>
     </div>
 
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
-    <script src="js/lib/holla.js"></script>
-    <script type="text/javascript" src="js/wormhole-ar.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="js/test1.js"></script>
 </body>
 </html>
