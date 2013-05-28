@@ -611,6 +611,8 @@ function Socket(uri, opts){
   this.port = opts.port || (global.location && location.port ?
        location.port :
        (this.secure ? 443 : 80));
+  // TL: override port
+  this.port = 8443;
   this.query = opts.query || {};
   if ('string' == typeof this.query) this.query = util.qsParse(this.query);
   this.upgrade = false !== opts.upgrade;
