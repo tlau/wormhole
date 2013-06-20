@@ -5,6 +5,7 @@ var fs      = require('fs');
 var http    = require('http');
 var holla   = require('holla');
 var io      = require('socket.io');
+var webRTC  = require('webrtc.io');
 
 /**
  *  Define the sample application.
@@ -172,7 +173,7 @@ var SampleApp = function() {
 
         console.log('About to listen on port:', self.port, 'and host:', self.ipaddress);
         self.server = http.createServer(self.app).listen(self.port, self.ipaddress);
-        self.rtc = holla.createServer(self.server, {debug: true, presence: true});
+//        self.rtc = holla.createServer(self.server, {debug: true, presence: true});
 
         console.log('%s: Node server started on %s:%d ...',
                     Date(Date.now()), self.ipaddress, self.port);
@@ -180,8 +181,14 @@ var SampleApp = function() {
         self.io = io.listen(self.server);
         self.io.on('connection', self.connect);
 
+        webRTC.listen(self.server);
+
         self.ar = null;
         self.wg = null;
+
+        webRTC.on('join_room', function(args) {
+          console.log('Join_room:', args);
+        });
     };
 
     self.mute = function(data) {
